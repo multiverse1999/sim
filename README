@@ -1,0 +1,118 @@
+You can read more info about sim and how to contribute on the project's website:
+http://sim.ssnf.xyz
+
+sim is a simple, interactive, multi-file text editor designed for screens with
+monospaced font. It is heavily inspired on the 'vim' and 'sam' text editors,
+hence the name sim.
+
+Requirements
+------------
+In order to compile this version of sim, you will need:
+	- a C89 compliant C library and compiler.
+	- a POSIX.1-2001 compliant system (for the termios.h functions).
+	- a system that supports the ioctl TIOCGWINSZ request, for querying the
+	terminal's window size.
+
+I tried to make sim more portable by depending only on the VT100 escape
+sequences for terminal size handling. But honestly it was just a pain in the
+ass. If I can make it work without any issues, I'll make sure to upstream it.
+
+In order to *use* sim, you'll need a terminal capable of handling the VT100
+escape sequences.
+
+sim has been successfully compiled and run on Linux using both musl and glibc.
+
+sim is expected to work without any changes on other Unix-based OSes and C
+libraries . If it doesn't, please let me know and I'll make it work.
+
+Building
+---------
+make
+or
+cc *.c
+
+Installation
+------------
+Just copy sim to somewhere on your PATH.
+
+Hacking
+-------
+sim is designed to be extremely flexible. Every keystroke is customizable.
+The core system relies on a simple table where you can map a key to a
+function and (optionally) give it an argument, which allows for a very
+creative usage of keys.
+
+Adding new features to sim is a breeze. Honestly, sometimes not even I
+believe how easy it is. Just create a function that does what you want, map
+it to a sane key on your config file, and compile it. *It just works*.
+
+config.def.h is the default key config file. You're supposed to copy it to
+config.h and edit it there, so that you do not lose your changes when a new
+patch comes out.
+
+sim also makes patches made by other people available at the project's site.
+You might find them interesting!
+
+Patches can be downloaded from http://sim.ssnf.xyz/patches
+
+In order to apply a patch, just use the patch command.
+
+Commands
+--------
+Although all commands are customizable, sim comes by default with vim-based
+keymaps (without, of course losing sim's charmful differences):
+
+	- c: change(), selects text and enters insert mode (supports counter)
+		- x:  current character
+		- c:  until end of line
+		- G:  until Bottom
+		- g:  from Top
+		- w:  word
+		- tX: until letter X
+	- C: alias to cc
+	- r: alias to cx
+	- d: delete() (supports counter)
+		- x:  current character
+		- d:  current line
+		- G:  until Bottom
+		- g:  from Top
+		- w:  word
+		- tX: until letter X
+	- D: alias to dd
+	- x: alias to dx
+	- .: dot(), repeats last command
+	- Alt + Num || Esc + Num: switch between Files
+	- E: file_open()
+	- q: file_close()
+	- S: file_save()
+	- i: insert()
+	- I: insert at the start of a line
+	- A: insert at the end of a line
+	- a: insert after current character
+	- o: insert below current line
+	- h: move left
+	- j: move down
+	- k: move up
+	- l: move right
+	- Ctrl + d: move Half a page down
+	- Ctrl + u: move Half a page up
+	- $: move to the end of a line
+	- G: move to the bottom
+	- g: move to the top
+	- w: move to the beginning of the next word
+	- e: move to the end of the next word
+	- b: move to the beginning of the previous word
+	- p: paste at current cursor position
+	- Q: quit sim
+	- /: enter search mode
+	- ?: enter reverse search mode
+	- n: search for next occurence
+	- N: search for previous occurence
+	- u: undo
+	- Ctrl + r: redo
+	- y: yank(), selects text
+		- y: current line
+		- G: until Bottom
+		- g: from Top
+		- w: word
+		- tX: until letter X
